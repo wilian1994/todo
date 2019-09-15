@@ -3,6 +3,19 @@
 <ul>
   <li *ngFor="let todo of todos">{{ todo.name }} - 
     <button (click)="remove(todo)">Remover</button> | 
-    <button *ngIf="!todo.done">Concluir</button>
-    <button *ngIf="todo.done">Refazer</button></li>
+    <button *ngIf="!todo.done" (click)="maskAsDone(todo)">Concluir</button>
+    <button *ngIf="todo.done" (click)="markAsUndone(todo)">Refazer</button></li>
 </ul>
+
+<form [formGroup]="form">
+  <fieldset >
+    <label >Tarefa: </label>
+    <input 
+      type="text" 
+      placeholder="Insira um texto" 
+      maxlength="60" 
+      formControlName="name">
+    <small *ngIf="form.controls.name.invalid && !form.controls.name.pristine">Este campo deve conter entre 3 e 60 caracteres</small>  
+    <button [disabled]="form.invalid">Salvar</button>
+  </fieldset>
+</form>
