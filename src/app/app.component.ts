@@ -10,7 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class AppComponent {
 
   public todos: Todo[] = [];
-  public title: String = 'Minhas Tarefas'
+  public name: String = 'Minhas Tarefas'
   public form: FormGroup;
 
   //always call this method
@@ -36,11 +36,28 @@ export class AppComponent {
     }
   }
 
+  add(){
+    const name = this.form.controls['name'].value;
+    const id = this.todos.length + 1;
+    this.todos.push(new Todo(id, name, false))
+    this.save()
+    this.clear()
+  }
+
+  clear(){
+    this.form.reset();
+  }
+
   maskAsDone(todo: Todo){
     todo.done = true;
   }
 
   markAsUndone(todo: Todo){
     todo.done = false;
+  }
+
+  save(){
+    const data = JSON.stringify(this.todos);
+    localStorage.setItem('item', data);
   }
 }

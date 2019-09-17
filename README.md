@@ -1,4 +1,4 @@
-#Class 11
+#Class 17, realizar os exercicios
 
 # Todo
 

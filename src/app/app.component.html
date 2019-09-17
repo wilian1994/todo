@@ -1,6 +1,9 @@
 <h1>{{ title }}</h1>
 
 <ul>
+  <p>
+    <small *ngIf="todos.length===0">Você ainda não tem tarefa hoje</small>
+  </p>
   <li *ngFor="let todo of todos">{{ todo.name }} - 
     <button (click)="remove(todo)">Remover</button> | 
     <button *ngIf="!todo.done" (click)="maskAsDone(todo)">Concluir</button>
@@ -16,6 +19,6 @@
       maxlength="60" 
       formControlName="name">
     <small *ngIf="form.controls.name.invalid && !form.controls.name.pristine">Este campo deve conter entre 3 e 60 caracteres</small>  
-    <button [disabled]="form.invalid">Salvar</button>
+    <button [disabled]="form.invalid" (click)="add()">Salvar</button>
   </fieldset>
 </form>
