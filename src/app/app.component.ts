@@ -1,63 +1,75 @@
 import { Component } from '@angular/core';
-import { Todo } from 'src/models/todo.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Todo } from 'src/models/todo.model';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-root', // <app-root>
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
   public todos: Todo[] = [];
-  public name: String = 'Minhas Tarefas'
   public form: FormGroup;
+  public mode: String = 'list';
 
-  //always call this method
   constructor(private fb: FormBuilder) {
-
     this.form = this.fb.group({
-      name: ['', Validators.compose([
+      title: ['', Validators.compose([
         Validators.minLength(3),
         Validators.maxLength(60),
-        Validators.required
+        Validators.required,
       ])]
-    })
+    });
 
-    this.todos.push(new Todo(1, 'Jogar futebol', true))
-    this.todos.push(new Todo(3, 'Jogar Poker', false))
-    
+    this.load();
   }
 
-  remove(todo: Todo){
-    const index = this.todos.indexOf(todo)
-    if(index !== -1){
-      this.todos.splice(index, 1);
-    }
+  changeMode(mode: String) {
+    this.mode = mode;
   }
 
-  add(){
-    const name = this.form.controls['name'].value;
+  add() {
+    const title = this.form.controls['title'].value;
     const id = this.todos.length + 1;
-    this.todos.push(new Todo(id, name, false))
-    this.save()
-    this.clear()
+    this.todos.push(new Todo(id, title, false));
+    this.save();
+    this.clear();
+    this.changeMode('list');
   }
 
-  clear(){
+  clear() {
     this.form.reset();
   }
 
-  maskAsDone(todo: Todo){
+  remove(todo: Todo) {
+    const index = this.todos.indexOf(todo);
+    if (index !== -1) {
+      this.todos.splice(index, 1);
+    }
+    this.save();
+  }
+
+  markAsDone(todo: Todo) {
     todo.done = true;
+    this.save();
   }
 
-  markAsUndone(todo: Todo){
+  markAsUndone(todo: Todo) {
     todo.done = false;
+    this.save();
   }
 
-  save(){
+  save() {
     const data = JSON.stringify(this.todos);
-    localStorage.setItem('item', data);
+    localStorage.setItem('todos', data);
+  }
+
+  load() {
+    const data = localStorage.getItem('todos');
+    if (data) {
+      this.todos = JSON.parse(data);
+    } else {
+      this.todos = [];
+    }
   }
 }
